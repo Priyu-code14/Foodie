@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="auth-wrap"><div class="auth-card">
+  <div class="text-center mb-4"><div class="auth-icon">🍴</div><h2 class="fw-bold">Create Account</h2><p class="text-secondary">Join Foodie and start ordering.</p></div>
+  <form method="post">{% csrf_token %}
+    <label class="form-label">Username</label><input name="username" class="form-control mb-3" required>
+    <label class="form-label">Email</label><input type="email" name="email" class="form-control mb-3" required>
+    <label class="form-label">Password</label><input type="password" name="password" class="form-control mb-3" required>
+    <label class="form-label">Confirm Password</label><input type="password" name="confirm_password" class="form-control mb-4" required>
+    <button class="btn btn-danger w-100 py-2">Create Account</button>
+  </form>
+  <p class="text-center mt-4 mb-0">Already registered? <a href="{% url 'login' %}" class="text-danger fw-semibold">Login</a></p>
+</div></div>
+{% endblock %}

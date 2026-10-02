@@ -1,0 +1,350 @@
+{% extends "base.html" %}
+
+{% block title %}Menu{% endblock %}
+
+{% block content %}
+
+<!-- =========================
+     MENU PAGE
+========================= -->
+
+<section class="menu-section">
+
+    <div class="container">
+
+        <!-- PAGE HEADER -->
+        <div class="menu-header text-center">
+
+            <span class="badge rounded-pill bg-light text-danger px-3 py-2 mb-3">
+                Freshly prepared
+            </span>
+
+            <h1>
+                Explore Our Menu
+            </h1>
+
+            <p>
+                Delicious food made for every craving.
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             CATEGORY FILTER
+        ========================= -->
+
+        <div class="menu-filter d-flex flex-wrap justify-content-center">
+
+            <!-- ALL -->
+            <a
+                href="{% url 'menu' %}"
+                class="btn {% if selected == 'All' %}btn-danger{% else %}btn-outline-danger{% endif %}"
+            >
+                All
+            </a>
+
+
+            <!-- CATEGORIES -->
+            {% for category in categories %}
+
+                <a
+                    href="{% url 'menu' %}?category={{ category }}"
+                    class="btn {% if selected == category %}btn-danger{% else %}btn-outline-danger{% endif %}"
+                >
+                    {{ category }}
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- =========================
+             FOOD GRID
+        ========================= -->
+
+        <div class="row g-4">
+
+            {% for food in foods %}
+
+                <div class="col-12 col-sm-6 col-lg-4">
+
+                    <div class="card food-card h-100">
+
+                        <!-- FOOD IMAGE -->
+                        <div class="food-image">
+
+                            {% if food.image %}
+
+                                <img
+                                    src="{{ food.image }}"
+                                    alt="{{ food.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% else %}
+
+                                <div class="food-image-placeholder">
+                                    🍽️
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- FOOD CONTENT -->
+                        <div class="food-content">
+
+                            <!-- CATEGORY -->
+                            <span class="food-category">
+                                {{ food.category }}
+                            </span>
+
+
+                            <!-- NAME -->
+                            <h5 class="food-name">
+                                {{ food.name }}
+                            </h5>
+
+
+                            <!-- DESCRIPTION -->
+                            <p>
+                                {{ food.description|truncatechars:90 }}
+                            </p>
+
+
+                            <!-- PRICE + CART -->
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+
+                                <div class="food-price">
+                                    ₹{{ food.price }}
+                                </div>
+
+                                <a
+                                    href="{% url 'add_to_cart' food.id %}"
+                                    class="btn btn-danger"
+                                >
+                                    <i class="bi bi-cart-plus me-1"></i>
+                                    Add
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <!-- EMPTY STATE -->
+                <div class="col-12">
+
+                    <div class="empty-state">
+
+                        <div class="icon">
+                            🍽️
+                        </div>
+
+                        <h3>
+                            No items found
+                        </h3>
+
+                        <p>
+                            There are no food items in this category yet.
+                        </p>
+
+                        <a
+                            href="{% url 'menu' %}"
+                            class="btn btn-danger mt-2"
+                        >
+                            View All Food
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     MENU-SPECIFIC STYLES
+========================= -->
+
+<style>
+
+    /* Menu header */
+
+    .menu-header {
+        margin-bottom: 35px;
+    }
+
+    .menu-header h1 {
+        font-size: 42px;
+        font-weight: 800;
+        color: #222;
+        margin-bottom: 8px;
+    }
+
+    .menu-header p {
+        font-size: 16px;
+        color: #777;
+    }
+
+
+    /* Category filter */
+
+    .menu-filter {
+        background: #ffffff;
+        padding: 12px;
+        border-radius: 14px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+        margin-bottom: 35px;
+        border: 1px solid #eeeeee;
+    }
+
+    .menu-filter .btn {
+        min-width: 80px;
+        margin: 3px;
+    }
+
+
+    /* Food image */
+
+    .food-image {
+        position: relative;
+        height: 230px;
+        overflow: hidden;
+        background: #f5f5f5;
+    }
+
+    .food-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.45s ease;
+    }
+
+    .food-card:hover .food-image img {
+        transform: scale(1.06);
+    }
+
+
+    /* Placeholder */
+
+    .food-image-placeholder {
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 70px;
+
+        background: linear-gradient(
+            135deg,
+            #fff1f1,
+            #fff8f2
+        );
+    }
+
+
+    /* Food content */
+
+    .food-content {
+        padding: 20px;
+    }
+
+    .food-name {
+        color: #222;
+        font-size: 18px;
+        font-weight: 700;
+        margin-top: 7px;
+        margin-bottom: 7px;
+    }
+
+    .food-content p {
+        color: #777;
+        font-size: 13px;
+        line-height: 1.6;
+        min-height: 42px;
+        margin-bottom: 0;
+    }
+
+    .food-price {
+        color: #222;
+        font-size: 19px;
+        font-weight: 700;
+    }
+
+
+    /* Add button */
+
+    .food-content .btn {
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+
+    /* Mobile */
+
+    @media (max-width: 767px) {
+
+        .menu-section {
+            padding-top: 35px;
+            padding-bottom: 35px;
+        }
+
+        .menu-header h1 {
+            font-size: 32px;
+        }
+
+        .food-image {
+            height: 210px;
+        }
+
+        .food-content {
+            padding: 17px;
+        }
+
+    }
+
+
+    @media (max-width: 480px) {
+
+        .menu-header h1 {
+            font-size: 28px;
+        }
+
+        .menu-filter {
+            padding: 8px;
+        }
+
+        .menu-filter .btn {
+            min-width: auto;
+            padding: 7px 12px;
+            font-size: 13px;
+        }
+
+        .food-image {
+            height: 200px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}

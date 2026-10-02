@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <span class="small text-danger fw-bold">YOUR ORDER</span>
+
+        <h1 class="fw-bold mt-2">
+            Your Cart 🛒
+        </h1>
+
+        <p class="text-secondary mb-0">
+            Review your delicious picks before checkout.
+        </p>
+    </div>
+
+
+    {% if items %}
+
+    <div class="row g-4">
+
+        <!-- CART ITEMS -->
+        <div class="col-lg-8">
+
+            {% for item in items %}
+
+            <div class="cart-item bg-white border-0 rounded-4 p-4 mb-3 shadow-sm">
+
+                <div class="row align-items-center g-3">
+
+                    <!-- Food Icon -->
+                    <div class="col-3 col-md-2">
+
+                        <div class="cart-thumb">
+                            🍽️
+                        </div>
+
+                    </div>
+
+
+                    <!-- Food Details -->
+                    <div class="col-9 col-md-4">
+
+                        <h5 class="fw-bold mb-1">
+                            {{ item.food.name }}
+                        </h5>
+
+                        <p class="mb-0 text-secondary small">
+                            {{ item.food.category }}
+                        </p>
+
+                        <p class="mb-0 text-danger fw-semibold">
+                            ₹{{ item.food.price }} each
+                        </p>
+
+                    </div>
+
+
+                    <!-- Quantity -->
+                    <div class="col-12 col-md-3">
+
+                        <form
+                            method="post"
+                            action="{% url 'update_cart' item.id %}"
+                            class="d-flex align-items-center gap-2"
+                        >
+
+                            {% csrf_token %}
+
+                            <input
+                                type="number"
+                                name="quantity"
+                                min="0"
+                                max="20"
+                                value="{{ item.quantity }}"
+                                class="form-control qty-input"
+                            >
+
+                            <button
+                                type="submit"
+                                class="btn btn-outline-danger btn-sm"
+                            >
+                                Update
+                            </button>
+
+                        </form>
+
+                    </div>
+
+
+                    <!-- Subtotal -->
+                    <div class="col-6 col-md-2">
+
+                        <span class="small text-secondary d-block">
+                            Subtotal
+                        </span>
+
+                        <strong class="fs-5">
+                            ₹{{ item.subtotal }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Remove -->
+                    <div class="col-6 col-md-1 text-end">
+
+                        <a
+                            href="{% url 'remove_from_cart' item.id %}"
+                            class="remove-cart-btn"
+                            title="Remove"
+                        >
+                            <i class="bi bi-trash3"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+
+            <!-- Continue Shopping -->
+
+            <div class="mt-4">
+
+                <a
+                    href="{% url 'menu' %}"
+                    class="btn btn-outline-danger rounded-pill px-4"
+                >
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Continue Shopping
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- ORDER SUMMARY -->
+
+        <div class="col-lg-4">
+
+            <div class="summary-card">
+
+                <div class="d-flex align-items-center mb-4">
+
+                    <div class="summary-icon">
+                        <i class="bi bi-receipt"></i>
+                    </div>
+
+                    <h4 class="fw-bold mb-0 ms-3">
+                        Order Summary
+                    </h4>
+
+                </div>
+
+
+                <div class="d-flex justify-content-between mb-3">
+
+                    <span class="text-secondary">
+                        Subtotal
+                    </span>
+
+                    <span class="fw-semibold">
+                        ₹{{ subtotal }}
+                    </span>
+
+                </div>
+
+
+                <div class="d-flex justify-content-between mb-3">
+
+                    <span class="text-secondary">
+                        Delivery
+                    </span>
+
+                    <span class="text-success fw-semibold">
+                        ₹{{ delivery }}
+                    </span>
+
+                </div>
+
+
+                <hr>
+
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+
+                    <span class="fw-bold fs-5">
+                        Total
+                    </span>
+
+                    <span class="fw-bold fs-4 text-danger">
+                        ₹{{ total }}
+                    </span>
+
+                </div>
+
+
+                <a
+                    href="{% url 'checkout' %}"
+                    class="btn btn-danger w-100 py-3 rounded-pill fw-semibold"
+                >
+                    Proceed to Checkout
+                    <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+
+
+                <div class="text-center mt-3">
+
+                    <small class="text-secondary">
+                        <i class="bi bi-shield-check text-success"></i>
+                        Secure & simple checkout
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {% else %}
+
+    <!-- EMPTY CART -->
+
+    <div class="empty-state text-center py-5">
+
+        <div class="empty-cart-icon">
+            🛒
+        </div>
+
+        <h3 class="fw-bold mt-4">
+            Your cart is empty
+        </h3>
+
+        <p class="text-secondary mb-4">
+            Add something tasty from the menu.
+        </p>
+
+        <a
+            href="{% url 'menu' %}"
+            class="btn btn-danger rounded-pill px-4 py-2"
+        >
+            <i class="bi bi-shop me-1"></i>
+            Browse Menu
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
